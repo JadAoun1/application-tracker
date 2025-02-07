@@ -15,60 +15,72 @@ router.get("/sign-up", (req, res) => {
     res.render("auth/sign-up.ejs");
 });
 
-// POST - SIGNING UP NEW USER!
+// POST - Signing Up New User!
 router.post("/sign-up", async (req, res) => {
-    // Checking if a user already exists
+    // Check if a user already exists
     const userInDatabase = await User.findOne({ username: req.body.username });
     if (userInDatabase) {
-        return res.send("Username already taken.");
+      return res.send("Username already taken.");
     }
-    // Checking if passwords match
+  
+    // Check if passwords match
     if (req.body.password !== req.body.confirmPassword) {
-        return res.send("Password and Confirm Password must match");
+      return res.send("Password and Confirm Password must match");
     }
-    // Scrambling up my password with extra characters and such
+  
+    // Hash the password
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     req.body.password = hashedPassword;
-    // Grabbing user data and sending thank you message!
+  
+    // Create the new user
     const user = await User.create(req.body);
-    res.send(`Thanks for signing up ${user.username}`);
+  
+    // Automatically log in the new user by setting the session
+    req.session.user = {
+      username: user.username,
+      _id: user._id
+    };
+    req.session.userId = user._id; // <-- Add this line
+  
+    // Redirect to the job applications dashboard
+    res.redirect("/applications");
+  });
+  
 
-})
 
-
-//GET - SIGN IN ROUTE
+// GET - Render the sign in page
 router.get("/sign-in", (req, res) => {
     res.render("auth/sign-in.ejs");
-});
+  });
 
-
-//POST - SIGN IN AS A USER
+  
+// POST - Sign In as a User
 router.post("/sign-in", async (req, res) => {
-    // First, get the user from the database
     const userInDatabase = await User.findOne({ username: req.body.username });
     if (!userInDatabase) {
-        return res.send("Login failed. Please try again.");
+      return res.send("Login failed. Please try again.");
     }
-
-    // There is a user! Time to test their password with bcrypt
+  
+    // Validate the password
     const validPassword = bcrypt.compareSync(
-        req.body.password,
-        userInDatabase.password
+      req.body.password,
+      userInDatabase.password
     );
     if (!validPassword) {
-        return res.send("Login failed. Please try again.");
+      return res.send("Login failed. Please try again.");
     }
-
-    // There is a user AND they had the correct password. Time to make a session!
-    // Avoid storing the password, even in hashed format, in the session
-    // If there is other data you want to save to `req.session.user`, do so here!
+  
+    // Create the user session
     req.session.user = {
-        username: userInDatabase.username,
-        _id: userInDatabase._id
+      username: userInDatabase.username,
+      _id: userInDatabase._id
     };
-
-    res.redirect("/");
-});
+    req.session.userId = userInDatabase._id; // <-- Add this line
+  
+    // Redirect to the job applications dashboard
+    res.redirect("/applications");
+  });
+  
 
 
 

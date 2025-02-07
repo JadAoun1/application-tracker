@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Applications</title>
+</head>
+<body>
+
+  <h1>Your Job Applications</h1>
+  
+  <p><a href="/applications/new">Add New Job Application</a></p>
+
+  <% if (applications.length === 0) { %>
+    <p>No job applications found.</p>
+  <% } else { %>
+    <table border="1">
+      <tr>
+        <th>Company</th>
+        <th>Job Title</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      <% applications.forEach(app => { %>
+        <tr>
+          <td><%= app.companyName %></td>
+          <td><%= app.jobTitle %></td>
+          <td><%= app.status %></td>
+          <td>
+            <a href="/applications/<%= app._id %>">View</a> | 
+            <a href="/applications/<%= app._id %>/edit">Edit</a> | 
+            <form action="/applications/<%= app._id %>?_method=DELETE" method="POST" style="display:inline;">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </table>
+  <% } %>
+
+
+</body>
+</html>

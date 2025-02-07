@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Job Application</title>
+</head>
+<body>
+
+  <h1>Edit Job Application</h1>
+
+  <form action="/applications/<%= application._id %>?_method=PUT" method="POST">
+    <label for="companyName">Company Name:</label>
+    <input type="text" id="companyName" name="companyName" value="<%= application.companyName %>" required><br>
+
+    <label for="jobTitle">Job Title:</label>
+    <input type="text" id="jobTitle" name="jobTitle" value="<%= application.jobTitle %>" required><br>
+
+    <label for="applicationDate">Application Date:</label>
+    <input type="date" id="applicationDate" name="applicationDate" value="<%= application.applicationDate.toISOString().split('T')[0] %>"><br>
+
+    <label for="status">Status:</label>
+    <select id="status" name="status">
+      <option value="Applied" <%= application.status === 'Applied' ? 'selected' : '' %>>Applied</option>
+      <option value="Interview" <%= application.status === 'Interview' ? 'selected' : '' %>>Interview</option>
+      <option value="Offer" <%= application.status === 'Offer' ? 'selected' : '' %>>Offer</option>
+      <option value="Rejected" <%= application.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+    </select><br>
+
+    <label for="notes">Notes:</label>
+    <textarea id="notes" name="notes"><%= application.notes %></textarea><br>
+
+    <button type="submit">Update Job Application</button>
+  </form>
+
+  <p><a href="/applications/<%= application._id %>">Cancel</a></p>
+
+</body>
+</html>

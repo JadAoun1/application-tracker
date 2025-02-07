@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Details</title>
+</head>
+<body>
+
+  <h1>Job Application Details</h1>
+
+  <p><strong>Company:</strong> <%= application.companyName %></p>
+  <p><strong>Job Title:</strong> <%= application.jobTitle %></p>
+  <p><strong>Application Date:</strong> <%= application.applicationDate.toDateString() %></p>
+  <p><strong>Status:</strong> <%= application.status %></p>
+  <p><strong>Notes:</strong> <%= application.notes %></p>
+
+  <p>
+    <a href="/applications/<%= application._id %>/edit">Edit</a> | 
+    <form action="/applications/<%= application._id %>?_method=DELETE" method="POST" style="display:inline;">
+      <button type="submit">Delete</button>
+    </form>
+  </p>
+
+  <p><a href="/applications">Back to Job Applications</a></p>
+
+</body>
+</html>
