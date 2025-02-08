@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const session = require("express-session");
+const path = require("path");  
+
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : "3000";
@@ -25,6 +27,8 @@ mongoose.connection.on("connected", () => {
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
 app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, 'src')));
+
 
 app.use(
   session({
@@ -54,15 +58,21 @@ app.get("/", (req, res) => {
   if (req.session.user) {
     return res.redirect("/applications"); // Redirect logged-in users to the dashboard
   }
-  res.render("index.ejs", { user: req.session.user });
+  const formType = req.query.form || "signin";  // Default form is Sign In
+  const error = req.query.error || null;
+  res.render("index.ejs", { user: req.session.user, formType, error });
 });
+
 
 
 // GET /applications - List all job applications for the logged-in user
 app.get("/applications", isAuthenticated, async (req, res) => {
   try {
     const applications = await JobApplication.find({ userId: req.session.userId });
-    res.render("applications/index.ejs", { applications });
+    res.render("applications/index.ejs", { 
+      applications,
+      user: req.session.user  // Pass the user object here
+    });
   } catch (err) {
     res.status(500).send("Error retrieving applications.");
   }
