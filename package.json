@@ -4,17 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-  "start": "node server.js",
-  "build:css": "tailwindcss -i ./src/tailwind.css -o ./src/styles.css --watch"
-}
-
-,
+    "start": "node server.js",
+    "build:css": "tailwindcss -i ./src/tailwind.css -o ./src/styles.css --watch"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
